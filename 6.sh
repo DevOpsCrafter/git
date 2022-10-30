@@ -122,9 +122,9 @@ EOF
 
 
 #######################################################
-#For loop to generate the report for every interface
-# define the interface being summarized
+#Task-2 For loop to generate the report for every interface
 interfaces=$(ifconfig | grep -w -o '^[^ ].*:' | tr -d :)
+interfaces=( "${interfaces[@]/'lo'}" )
 
 for interface in $interfaces; do
 
@@ -133,7 +133,6 @@ ipv4_hostname=$(getent hosts $ipv4_address | awk '{print $2}')
 network_address=$(ip route list dev $interface scope link|cut -d ' ' -f 1)
 network_number=$(cut -d / -f 1 <<<"$network_address")
 network_name=$(getent networks $network_number|awk '{print $1}')
-echo "DeviceName: "$interfaces
 
 cat <<EOF
 Interface $interface:
@@ -145,5 +144,4 @@ Network Name    : $network_name
 EOF
 
 done
-#####
-#####
+#######################################################
